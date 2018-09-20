@@ -1,9 +1,19 @@
 var express = require("express");
+var mongoose = require("mongoose");
 var app = express();
+
+mongoose.connect("mongodb://localhost/yelpCamp");
 var bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
+
+//Scema Setup
+var campgroundSchema = new mongoose.Schema({
+    name: String,
+    image: String,
+    description: String
+});
 
 app.get("/", function(req, res){
     res.render("landing");
