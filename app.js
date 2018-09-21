@@ -1,6 +1,9 @@
 var express = require("express");
 var mongoose = require("mongoose");
 var app = express();
+var Campground = require("./models/campground.js");
+var Comments = require("./models/comment.js");
+var Users = require("./models/users.js");
 
 mongoose.connect("mongodb://localhost/yelpCamp");
 var bodyParser = require("body-parser");
@@ -8,12 +11,8 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
 
-//Scema Setup
-var campgroundSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
+
+
 
 app.get("/", function(req, res){
     res.render("landing");
@@ -21,14 +20,13 @@ app.get("/", function(req, res){
 
 app.get("/campgrounds", function(req, res){
 
-    var campgrounds = [
-        {name: "Salmon Creek", image: "https://www.outdoorproject.com/sites/default/files/styles/odp_header_adaptive/public/features/dscf9483.jpg?itok=oIMTmpPV"},
-        {name: "7 Lakes", image: "https://i.ytimg.com/vi/Hc8mvPmcJyU/maxresdefault.jpg"}
-
-    ];
-
-
-    res.render("campground", {campgrounds:campgrounds});
+    Campground.find({}, function(err, allcampgrounds){
+        if(err){
+            console.log(err);
+        }  else {
+            res.render("campground/index", {campgrounds:allcampgrounds});
+        }
+     });
 });
 
 app.post("/campgrounds", function(req, res){
@@ -48,8 +46,49 @@ app.post("/campgrounds", function(req, res){
 });
 
 app.get("/campgrounds/new", function(req, res){
-    res.render("new");
+    res.render("campground/new");
 });
+
+app.get("/campgrounds/:id", function(req, res){
+    Campground.findById(req.params.id).populate("comments").exec(function(err, showCamp){
+        if(err){
+            console.log(err);
+        }else{
+            //find the campground with the provided id and render the template
+            res.render("campground/show", {campground: showCamp});
+        }
+    });
+  
+});
+
+
+app.get("/campgrounds/:id/comments/new", function(req, res){
+    Campground.findById(req.params.id, function(err, campground){
+
+        res.render("comment/new", {campground: campground});
+    });
+});
+
+app.post("/campgrounds/:id/comments",function(req, res){
+    Campground.findById(req.params.id, function(err, campground){
+        if(err){
+            console.log(err);
+            res.redirect("/campgrounds");
+        }else{
+            Comments.create(req.body.comment, function(err, comment){
+                if(err){
+                    console.log(err);
+                }else{
+                campground.comments.push(comment);
+                campground.save();
+                res.redirect('/campgrounds/' + campground._id);
+                }
+            });
+        }
+    });
+});
+
+
 
 app.listen(3000, function(){
     console.log("Server has started");
