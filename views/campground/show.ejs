@@ -1,4 +1,5 @@
 <% include ../layouts/header %>
+<br>
 <div class="container">
 
 <div class="row">
@@ -13,14 +14,33 @@
 
     <div class="col-md-9">
         <h1><%=campground.name %></h1>
-        <img src="<%= campground.image %>">
-        <p><%= campground.description %></p>
-        <a href="/campgrounds/<%= campground._id %>/comments/new" class="btn btn-secondary"> Add new Comment</a>
-
-        <% campground.comments.forEach(function(comment){ %>
-            <p> <strong> <%= comment.author %></strong> - <%= comment.text %></p>
-        <% }) %>
+        <div class="card">
+            <img class="card-img-top" src="<%= campground.image %>">
+            <div class="card-body">
+                <h2 class="card-title"><%=campground.name %></h2>
+                <p class="card-text"><%= campground.description %></p>
+            </div>
+            <div class="card-header">
+                Comments
+            </div>
+            <ul class="list-group list-group-flush">
+                <% campground.comments.forEach(function(comment){ %>
+                    <li class="list-group-item"> 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <strong> <%= comment.author %></strong>
+                                <span class="float-right">10 Days ago</span> 
+                                <p> <%= comment.text %> </p>
+                            </div>
+                        </div>  
+                    </li>
+                <% }) %>
+            <ul>
+            <div class="card-body">
+            <a href="/campgrounds/<%= campground._id %>/comments/new" class="btn btn-secondary"> Add new Comment</a>
+            </div>
         </div>
+        
     </div>
 </div>
 <% include ../layouts/footer %>
