@@ -19,6 +19,7 @@
             <div class="card-body">
                 <h2 class="card-title"><%=campground.name %></h2>
                 <p class="card-text"><%= campground.description %></p>
+                <p class="card-text"> <em> Submitted by <%= campground.author.username%> </em> </p>
             </div>
             <div class="card-header">
                 Comments
@@ -28,7 +29,7 @@
                     <li class="list-group-item"> 
                         <div class="row">
                             <div class="col-md-12">
-                                <strong> <%= comment.author %></strong>
+                                <strong> <%= comment.author.username %></strong>
                                 <span class="float-right">10 Days ago</span> 
                                 <p> <%= comment.text %> </p>
                             </div>
