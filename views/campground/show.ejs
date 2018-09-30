@@ -21,6 +21,13 @@
                 <p class="card-text"><%= campground.description %></p>
                 <p class="card-text"> <em> Submitted by <%= campground.author.username%> </em> </p>
             </div>
+            <% if(currentUser && campground.author.id.equals(currentUser._id)){ %>
+            <a class="btn btn-warning" href="/campgrounds/<%= campground._id%>/edit">Edit</a>
+            <form action="/campgrounds/<%=campground._id %>/destroy" method="POST" style="width:100%;">
+                <button type="submit" class="btn btn-danger" style="width:100%;">Delete</button>
+            </form>
+            <% } %>
+
             <div class="card-header">
                 Comments
             </div>
@@ -33,7 +40,19 @@
                                 <span class="float-right">10 Days ago</span> 
                                 <p> <%= comment.text %> </p>
                             </div>
-                        </div>  
+                        </div>
+                        <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a class="btn btn-warning" href="/campgrounds/<%= campground._id%>/comments/<%= comment.id %>/edit">Edit</a>
+                            </div>
+                            <div class="col-md-3">
+                                <form action="/campgrounds/<%=campground._id %>/comments/<%= comment.id %>/destroy" method="POST">
+                                    <button type="submit" class="btn btn-danger" style="width:100%;">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        <% } %>
                     </li>
                 <% }) %>
             <ul>

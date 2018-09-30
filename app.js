@@ -6,6 +6,7 @@ var Comments = require("./models/comment.js");
 var User = require("./models/users.js");
 var passport = require("passport"); 
 var LocalStrategy = require("passport-local");
+var flash = require("connect-flash");
 
 //adding in routes
 var commentRoutes = require("./routes/comments.js");
@@ -17,7 +18,7 @@ var bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
-
+app.use(flash());
 
 //Passport Config
 app.use(require("express-session")({
@@ -33,6 +34,8 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
     next();
 });
 app.use(indexRoutes);

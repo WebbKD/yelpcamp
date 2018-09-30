@@ -1,0 +1,15 @@
+<% include ../layouts/header %>
+<header class="jumbotron">
+    <h1>Edit this Comment</h1>
+</header>
+<div class="container">
+<form action="/campgrounds/<%= campground_id %>/comments/<%= comment._id %>/update" method="POST">
+  <div class="form-group">
+    <label for="text">Text</label>
+    <input type="text" class="form-control" id="text" name="comment[text]" value="<%=comment.text %>">
+  </div>
+   <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+
+<% include ../layouts/footer %>
